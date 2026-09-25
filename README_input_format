@@ -1,0 +1,103 @@
+## Input network format
+
+The input network must be provided as a **bipartite edge list** stored in a plain-text file with extension `.dat`, `.txt`, or `.edge`.
+
+Each line represents one edge of the bipartite network and must contain exactly two integer node identifiers:
+
+```text
+node_id    feature_id
+```
+
+The first column corresponds to nodes in the first layer of the bipartite network (hereafter, **nodes**), while the second column corresponds to nodes in the second layer (hereafter, **features**).
+
+Columns can be separated by spaces or tabs. The file should not contain a header.
+
+### Node indexing
+
+In the current implementation, node identifiers must be non-negative integers and the two bipartite layers must use a common, non-overlapping indexing scheme.
+
+Nodes in the first layer should be indexed starting from `0`. If the largest node identifier in the first layer is `N-1`, feature identifiers must start from `N`.
+
+For example, a network with four nodes in the first layer could be written as
+
+```text
+0    4
+0    5
+1    4
+1    6
+2    5
+2    7
+3    4
+3    7
+```
+
+Here,
+
+```text
+First layer:   0, 1, 2, 3
+Second layer:  4, 5, 6, 7
+```
+
+Thus, node identifiers in the two layers must not overlap.
+
+The following format is **not compatible with the current implementation**:
+
+```text
+0    0
+0    1
+1    0
+1    2
+```
+
+even though this is a valid bipartite edge list in which each layer is indexed independently. Before using such a network, the identifiers of the second layer must be shifted so that they start after the largest identifier of the first layer.
+
+For example,
+
+```text
+0    0
+0    1
+1    0
+1    2
+```
+
+should be converted to
+
+```text
+0    2
+0    3
+1    2
+1    4
+```
+
+### Additional requirements
+
+* The network must be **unweighted**. Each line represents the presence of one edge.
+* Multiple copies of the same edge are not allowed. The program checks for multiedges and stops if duplicates are detected.
+* Node identifiers must be non-negative integers.
+* The file should contain only the two columns defining the edges; do not include column names or a header.
+* Isolated nodes cannot be specified in the edge-list format and are therefore not included in the analysis.
+* The order of the edges in the file is irrelevant.
+
+### Example input file
+
+A valid file named, for example, `edge_list_pp.dat` is
+
+```text
+0	5
+0	7
+1	5
+1	6
+2	6
+2	8
+3	5
+3	8
+4	7
+4	8
+```
+
+In this example, nodes `0–4` belong to the first bipartite layer and nodes `5–8` belong to the second layer.
+
+The program searches for the input file using the base name specified by `DATASET_NAME` in the source code and accepts the extensions `.dat`, `.txt`, and `.edge`.
+
+
+
