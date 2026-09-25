@@ -1,4 +1,3 @@
-
 #include <time.h>
 #include <assert.h>
 #include <stdio.h>
@@ -33,7 +32,7 @@ long long factorial(long long x) { if(x==0LL) return 1LL; else return x*factoria
 
 #define DATASET_NAME "edge_list_pp"
 
-#define realisations    100
+#define realisations    1000
 
 using namespace std;
 
@@ -74,7 +73,6 @@ unsigned char irr;
 
 #define n_tiempos   1000
 
-
 void inicializa_randomm(void)
 {
     int i;
@@ -95,20 +93,6 @@ int main(int n_args,char *args[])
 {
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // Seed RNG with current time
     inicializa_randomm();
-
-    /*FILE * fp1;
-    char file_fp1[200];
-    sprintf(file_fp1, "facebook_clustering_links.dat");
-    fp1 = fopen (file_fp1, "w"); if (fp1 == NULL) { perror("Failed: "); return 1; }
-
-    FILE * fp2;
-    char file_fp2[200];
-    sprintf(file_fp2, "facebook_rewiring_network_links.dat");
-    fp2 = fopen (file_fp2, "w"); if (fp2 == NULL) { perror("Failed: "); return 1; }
-
-    const char* file_nodes = "Facebook_bipartite.txt"; // Edge list: "node_id feature_id"
-    FILE *file = fopen(file_nodes, "r");
-    if (!file) { printf("Error opening file %s\n", file_nodes); return 1; }*/
 
     // input --------------------
 
@@ -238,13 +222,9 @@ int main(int n_args,char *args[])
     // Keep 'a' as the actual number of loaded links, because later code uses it.
     N_l = a;
 
-
-
     check_multiedges_after_loading(N_l, links);
 
-
-
-printf("Clustering Coefficient original network\n");
+    printf("Clustering Coefficient original network\n");
 
     /***CLUSTERING coefficient***/
     int i, ii, iii, j, jj, triangles;
@@ -294,13 +274,14 @@ printf("Clustering Coefficient original network\n");
 fclose(fp1);
 
 
-
 printf("Rewiring\n");
 
 int link1, link2, flag, changes = 0;
 int node1, node2, feature1, feature2;
 
 for(int re = 0; re < realisations; re++){
+
+    int changes = 0;   // RESET for every random realization
 
     do{
 
@@ -326,17 +307,6 @@ for(int re = 0; re < realisations; re++){
         node2 = links[link2].node;
         feature2 = links[link2].feat;
 
-       /* printf("\n node1---- \t" );
-        for(i=0;i<nodes[node1].degree;i++){ printf("feat1 %d\t",nodes[node1].links[i] ); }
-        printf("\n \n node2---- \t" );
-        for(i=0;i<nodes[node2].degree;i++){ printf("feat2 %d\t",nodes[node2].links[i] ); }
-        printf("\n \n feature1---- \t" );
-        for(i=0;i<features[feature1].degree;i++){ printf("node1 %d\t",features[feature1].links[i] ); }
-        printf("\n \n  feature2---- \t" );
-        for(i=0;i<features[feature2].degree;i++){ printf("node2 %d\t",features[feature2].links[i] ); }
-        printf("\n \n" );
-        */
-
         links[link1].node = node2;
         links[link2].node = node1;
 
@@ -356,21 +326,6 @@ for(int re = 0; re < realisations; re++){
         auto newEnd4 = std::remove(features[feature2].links.begin(), features[feature2].links.end(), node2);
         features[feature2].links.erase(newEnd4,features[feature2].links.end());
         features[feature2].links.push_back(node1);
-
-
-       /* printf("L1 %d\t  L2 %d\t node1 %d\t  feat1 %d\t node2 %d\t feat2 %d\n", link1, link2, links[link1].node, links[link1].feat, links[link2].node, links[link2].feat   );
-        printf("\n node1---- \t" );
-        for(i=0;i<nodes[node1].degree;i++){ printf("feat1 %d\t",nodes[node1].links[i] ); }
-        printf("\n \n node2---- \t" );
-        for(i=0;i<nodes[node2].degree;i++){ printf("feat2 %d\t",nodes[node2].links[i] ); }
-        printf("\n \n feature1---- \t" );
-        for(i=0;i<features[feature1].degree;i++){ printf("node1 %d\t",features[feature1].links[i] ); }
-        printf("\n \n  feature2---- \t" );
-        for(i=0;i<features[feature2].degree;i++){ printf("node2 %d\t",features[feature2].links[i] ); }
-        printf("\n \n" );
-
-        getchar();*/
-
 
 
         changes++;
@@ -420,16 +375,11 @@ for(int re = 0; re < realisations; re++){
                         }
 
 
-
-
-
         for(i=N_n;i<N_features;i++) {fprintf(fp2,"%d\t%d\t%f\t%f\t%f\n",i, features[i].degree, features[i].clustering, features[i].clustering_rewiring, features[i].clustering /  features[i].clustering_rewiring);}
         printf("realisation = %d\n",re);
 
 }
 fclose(fp2);
-
-
 
 
 }
