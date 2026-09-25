@@ -9,6 +9,7 @@ node_id    feature_id
 ```
 
 The first column corresponds to nodes in the first layer of the bipartite network (hereafter, **nodes**), while the second column corresponds to nodes in the second layer (hereafter, **features**).
+The nodes in the second layer are the ones that will be filtered.
 
 Columns can be separated by spaces or tabs. The file should not contain a header.
 
